@@ -1,0 +1,57 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": ""
+    },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "us-east-1",
+        "source_ami": "ami-de0d9eb7",
+        "instance_type": "t1.micro",
+        "ssh_username": "ubuntu",
+        "ami_name": "packer-example {{timestamp}}"
+    }],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "echo 'Waiting 30s for box to initialize...'",
+                "sleep 30",
+                "wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb",
+                "sudo dpkg -i puppetlabs-release-precise.deb",
+                "sudo apt-get update -y",
+                "sudo apt-get install -y puppet-common",
+                "sudo puppet module install puppetlabs-git",
+                "sudo puppet module install puppetlabs-vcsrepo"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "puppet/hieradata",
+            "destination": "/tmp/hieradata"
+        },
+        {
+            "type": "file",
+            "source": "puppet/modules",
+            "destination": "/tmp/puppet-modules"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo cp -r /tmp/hieradata /etc/puppet/hieradata",
+                "rm -rf /tmp/hieradata",
+                "sudo cp -r /tmp/puppet-modules/* /etc/puppet/modules",
+                "rm -rf /tmp/puppet-modules",
+                "ls -l /etc/puppet/modules"
+            ]
+        },
+        {
+            "type": "puppet-masterless",
+            "manifest_file": "puppet/manifests/example.pp",
+            "hiera_config_path": "puppet/hiera.yaml",
+            "execute_command": "{{.FacterVars}}{{if .Sudo}} sudo -E {{end}}puppet apply --verbose --detailed-exitcodes {{if ne .HieraConfigPath \"\"}}--hiera_config='{{.HieraConfigPath}}' {{end}}{{.ManifestFile}}"
+        }
+    ]
+}
