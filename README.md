@@ -29,4 +29,4 @@ This builds an image with the defualt role, which doesn't do much.
 This example comes with an alternative role, `student`, which can be selected
 by overriding the `puppet_role` user variable, like this:
 
-    packer build -var-file=variables.json -var puppet_role=student example.json
+    packer build -var-file=credentials.json -var puppet_role=student example.json
