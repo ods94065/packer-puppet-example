@@ -1,7 +1,8 @@
 {
     "variables": {
         "aws_access_key": "",
-        "aws_secret_key": ""
+        "aws_secret_key": "",
+        "puppet_role": "default"
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -49,7 +50,7 @@
         },
         {
             "type": "puppet-masterless",
-            "manifest_file": "puppet/manifests/example.pp",
+            "manifest_file": "puppet/manifests/{{user `puppet_role`}}.pp",
             "hiera_config_path": "puppet/hiera.yaml",
             "execute_command": "{{.FacterVars}}{{if .Sudo}} sudo -E {{end}}puppet apply --verbose --detailed-exitcodes {{if ne .HieraConfigPath \"\"}}--hiera_config='{{.HieraConfigPath}}' {{end}}{{.ManifestFile}}"
         }

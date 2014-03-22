@@ -1,5 +1,5 @@
 .idea/
 *~
 #*
-variables.json
+credentials.json
 packer_cache/
