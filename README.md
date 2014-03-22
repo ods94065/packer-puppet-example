@@ -32,9 +32,9 @@ but it is not so handy when it comes to generating different kinds of images,
 which may correspond to different machine "roles".
 
 Inspired by the example provided by[James Carr's blog post](http://blog.james-carr.org/2013/07/24/immutable-servers-with-packer-and-puppet/),
-we provide a mechanism to specify different kinds of "nodes", which differ
-only in their Puppet node configuration. The configuration of these different
-image kinds is managed by `nodes.yaml`.
+we provide a mechanism to specify different kinds of nodes, which differ only
+in their Puppet node configuration. The configuration of these different image
+kinds is managed by `nodes.yaml`.
 
 To define a new kind of node, edit `nodes.yaml` and add your node name as a new
 key at the top level. The `classes` list underneath it is a list of Puppet classes
