@@ -1,0 +1,8 @@
+---
+# The different kinds of nodes (images) we are managing, and what goes onto them.
+default:
+  classes:
+    - dummy
+student:
+  classes:
+    - student
