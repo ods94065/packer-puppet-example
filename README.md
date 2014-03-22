@@ -19,14 +19,24 @@ file containing your AWS credentials. It should look like this:
         "aws_secret_key": "YOUR SECRET KEY GOES HERE"
     }
 
-Then, assuming Packer is already installed, from the top level of this repo,
-do this to build the AWS image:
+The Packer specs and Puppet manifests for configuring the images are built by
+Rake. You can run `rake -T` to find out which targets are available; the
+Packer targets are under `rake packs:*`. To build all of the images, do this:
 
-    packer build -var-file=credentials.json example.json
+    rake packs:all:build
 
-This builds an image with the defualt role, which doesn't do much.
+## Configuring Nodes
 
-This example comes with an alternative role, `student`, which can be selected
-by overriding the `puppet_role` user variable, like this:
+Packer can easily generate multiple different images with the same configuration,
+but it is not so handy when it comes to generating different kinds of images,
+which may correspond to different machine "roles".
 
-    packer build -var-file=credentials.json -var puppet_role=student example.json
+Inspired by the example provided by[James Carr's blog post](http://blog.james-carr.org/2013/07/24/immutable-servers-with-packer-and-puppet/),
+we provide a mechanism to specify different kinds of "nodes", which differ
+only in their Puppet node configuration. The configuration of these different
+image kinds is managed by `nodes.yaml`.
+
+To define a new kind of node, edit `nodes.yaml` and add your node name as a new
+key at the top level. The `classes` list underneath it is a list of Puppet classes
+to be included for the specified node. Rake will generate all the necessary tasks
+to manage this kind of node based on the contents of `nodes.yaml`.
