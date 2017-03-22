@@ -31,7 +31,7 @@ Packer can easily generate multiple different images with the same configuration
 but it is not so handy when it comes to generating different kinds of images,
 which may correspond to different machine "roles".
 
-Inspired by the example provided by[James Carr's blog post](http://blog.james-carr.org/2013/07/24/immutable-servers-with-packer-and-puppet/),
+Inspired by the example provided by[James Carr's blog post](https://dzone.com/articles/immutable-servers-packer-and),
 we provide a mechanism to specify different kinds of nodes, which differ only
 in their Puppet node configuration. The configuration of these different image
 kinds is managed by `nodes.yaml`.
